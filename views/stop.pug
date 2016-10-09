@@ -1,0 +1,20 @@
+html
+  head
+    link(href="/style.css" rel="stylesheet")
+    meta(name="viewport" content="maximum-scale=1, user-scalable=0")
+  body
+    div(class='container')
+      div(class='top')
+      div(class='cardFeed')
+        center
+          div(class='card iFrame')
+            iframe(src=iFrameSick1)
+          hr
+          a(href=/delSpot/ + rID + '/')
+            div(class='card single')
+             | This stop was already taken
+          a(href=/delSpot/ + rID + '/')
+            div(class='card single')
+             | I took this stop
+          
+          

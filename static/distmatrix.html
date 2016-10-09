@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title></title>
+<style>
+#mapdiv {
+	margin: 0;
+	padding: 0;
+	width: 500px;
+	height: 500px;
+}
+
+#latitude, #longitude
+{
+	
+}
+</style>
+
+<script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=true"></script>
+<script>
+	var getId = null;
+	function revGeoLocate()
+	{
+		if (navigator.geolocation)
+		{
+			var options =
+				{
+					enableHighAccuracy : true,
+					timeout : Infinity,
+					maximumAge : 0
+				};
+			getId = navigator.geolocation.getCurrentPosition(showPosition, showError, options); //To do : Stop this from reiterating
+		}
+		else
+		{
+			alert('Geolocation is not supported in your browser');
+		}
+	}
+
+	function showPosition(position)
+	{
+			elem = document.getElementById('mapdiv');
+			var geocoder = new google.maps.Geocoder;
+			var latlng = {lat : position.coords.latitude, lng : position.coords.longitude};
+			geocoder.geocode({'location' : latlng},
+			function(results, status)
+				{
+				if(status == 'OK')
+					{
+						if(results[0])
+							elem.innerHTML += "Location : " + results[0].formatted_address;
+					}
+				});
+
+			console.log((latlng.lat).toFixed(5) + "," + (latlng.lng).toFixed(5));
+			document.getElementById('latitude').value = latlng.lat;
+			document.getElementById('longitude').value = latlng.lng;
+	}
+
+	function showError(error)
+	{
+		var err = document.getElementById('mapdiv');
+		switch(error.code)
+		{
+			case error.PERMISSION_DENIED:
+			err.innerHTML = "User denied the request for Geolocation."
+			break;
+			case error.POSITION_UNAVAILABLE:
+			err.innerHTML = "Location information is unavailable."
+			break;
+			case error.TIMEOUT:
+			err.innerHTML = "The request to get user location timed out."
+			break;
+			case error.UNKNOWN_ERROR:
+			err.innerHTML = "An unknown error occurred."
+			break;
+		}
+	}
+	</script>
+	</head>
+	<body onload = revGeoLocate()>
+		<p id = mapdiv></p>
+		<form action = /findSpot method = POST>
+		<input name = lng type = text id = longitude>
+		<input name = lat type = text id = latitude>
+		<input type = submit value = Submit>
+		</form>
+	</body>
+</html>

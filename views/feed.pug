@@ -1,0 +1,29 @@
+html
+  head
+    link(href="style.css" rel="stylesheet")
+    meta(name="viewport" content="maximum-scale=1, user-scalable=0")
+  body
+    div(class='container')
+      div(class='top')
+      div(class='cardFeed')
+        center
+          a(href='/location2.html')
+            div(class='card')
+              div(class='cirq') +
+              p
+                b 
+                  | Vacating a parking spot?
+                  br
+                | Share for points
+          hr
+          each item in dataset
+            - var id = item[4]
+            a(href=/spot/ + id + '/' + lat + '/' + lng + '/' + item[0])  
+              div(class='card')
+                div(class='cirq solei') +
+                p
+                 b= item[0]
+                 br
+                 | #{item[1]} min away - Vacated #{item[2]} min ago
+          
+      
