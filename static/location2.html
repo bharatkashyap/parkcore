@@ -34,7 +34,7 @@
 
 	function showPosition(position)
 	{
-			elem = document.getElementById('mapdiv');
+			elems = document.getElementsByClassName('mapdiv');
 			var geocoder = new google.maps.Geocoder;
 			var latlng = {lat : position.coords.latitude, lng : position.coords.longitude};
 			geocoder.geocode({'location' : latlng},
@@ -43,13 +43,17 @@
 				if(status == 'OK')
 					{
 						if(results[0])
-							elem.innerHTML = "" + results[0].formatted_address.substring(0, results[0].formatted_address.length-15);
+							//elem.innerHTML = "" + results[0].formatted_address.substring(0, results[0].formatted_address.length-15);
+							elems[0].innerHTML = "Location : " + results[0].address_components[0].long_name + ", " + results[0].address_components[1].long_name + ", " + results[0].address_components[2].long_name + ", " + results[0].address_components[3].long_name;
+
 					}
 				});
 
 			console.log((latlng.lat).toFixed(5) + "," + (latlng.lng).toFixed(5));
-			document.getElementById('latitude').value = latlng.lat;
-			document.getElementById('longitude').value = latlng.lng;
+			var latfield = document.getElementsByClassName('latitude');
+			latfield[0].value = latlng.lat;
+			var longfield = document.getElementsByClassName('longitude');
+			longfield[0].value = latlng.lng;
 			document.getElementById('submitLocation').disabled = false;
 	}
 
@@ -80,11 +84,11 @@
 			<div class='cardFeed'>
 			<center>
 				<div class='card' style='box-sizing: border-box;'>
-					<p id='mapdiv'>Location: Fetching Address..</p>
+					<p class = 'mapdiv'>Location: Fetching Address..</p>
 					<form action='/addSpot' method='POST'>
 						<p class='formLatLong'>
-						Longitude: <input name='lng' type='text' id='longitude' > <br>
-						Latitude: <input name='lat' type='text' id='latitude' > <br> <br>
+						Longitude: <input name='lng1' type='text' class = 'longitude' > <br>
+						Latitude: <input name='lat1' type='text' class = 'latitude' > <br> <br>
 						</p>
 						<center><input type='submit' value='Add Parking Spot' disabled id='submitLocation'></center> <br>
 					</form>
