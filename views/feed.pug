@@ -7,23 +7,33 @@ html
       div(class='top')
       div(class='cardFeed')
         center
-          a(href='/location2.html')
-            div(class='card')
-              div(class='cirq') +
-              p
-                b 
-                  | Vacating a parking spot?
-                  br
-                | Share for points
-          hr
-          each item in dataset
-            - var id = item[4]
-            a(href=/spot/ + id + '/' + lat + '/' + lng + '/' + item[0])  
+          if err_msg
+            p 
+              | #{err_msg}
+          else
+            a(href='/location2.html')
               div(class='card')
-                div(class='cirq solei') +
+                div(class='cirq') +
                 p
-                 b= item[0]
-                 br
-                 | #{item[1]} min away - Vacated #{item[2]} min ago
+                  b 
+                    | Vacating a parking spot?
+                    br
+                  | Share for points
+          hr
+          if dataset
+            each item in dataset
+              - var id = item[4]
+              a(href=/spot/ + id + '/' + lat + '/' + lng + '/' + item[0])  
+                div(class='card')
+                  div(class='cirq solei') +
+                  p
+                    b= item[0]
+                    br
+                    | #{item[1]} min away - Vacated #{item[2]} min ago
+          else
+            div(class='card')
+              p(id='errmsg')
+                | #{errm}
+         
           
       
