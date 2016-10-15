@@ -3,6 +3,13 @@ module.exports = function (app) {
     //Bring MySQL into the app
     var mysql = require("mysql");
     
+    function sortFunction(a, b) 
+                            {
+                              if (a[3] === b[3])
+                                return 0;
+                              else
+                                return (a[3] < b[3]) ? -1 : 1;
+                            }
     // First you need to create a connection to the db
     var con = mysql.createConnection({
       host: "localhost",
@@ -47,7 +54,7 @@ module.exports = function (app) {
           var dataset2 = [];
           var finalrray = [];
           var delta = {};
-          var idek = 0;
+          var g_count = 0;
 
           con.query('SELECT Lat, Lng, Time, Id FROM spots', 
           function(err,rows) 
@@ -75,76 +82,59 @@ module.exports = function (app) {
                 var something = (seconds-(rows[i].Time/1000))/60;
                 to.push(something);
               }
-            
+          
               for(var k = 0; k<rows.length; k++)
               {
-                
                 var distServ = require('google-distance');
                 var x = distServ.get(
                     {
+                      index : k,
                       origins : [origin],
                       destinations : [longlats[k]], 
                       mode : 'driving'
                     },
                   function(err, data)
                     { 
-                      idek++;
-                      if(data)  
-                        {
+                      g_count++;
+                      
+                      if(!err)  {
+
+                          var ind = data[0].index;
                           
-                          var index = dataset.push([data[0].destination, data[0].durationValue/60]);
+                          if(ind==null)
+                              ind = 0;
+                              
+                          var dVal = (data[0].durationValue)/60;
+                          var dest = data[0].destination;
                           
-                          console.log(index);
-                          if((dataset[index-1][1])<30)
-                            dataset2.push([dataset[idek-1][0].substring(0,dataset[idek-1][0].length-15), Math.ceil(dataset[idek-1][1]), Math.ceil(to[idek-1]), 3*to[idek-1]+dataset[idek-1][1], rows[idek-1].Id]);
-                          
-                    
-                          function sortFunction(a, b) 
+                          if (dVal < 30)
                             {
-                              if (a[3] === b[3])
-                                return 0;
-                              else
-                                return (a[3] < b[3]) ? -1 : 1;
+                            dataset2.push([dest.substring(0,dest.length-15), Math.ceil(dVal), Math.ceil(to[ind]), 3*to[ind]+dVal, rows[ind].Id]);
                             }
-                            
-          
-              
-                          if(idek==rows.length)
-                            {
-                            dataset2 = dataset2.sort(sortFunction); 
-                            res.render('feed', {dataset : dataset2, lat : lat, lng : lng});
+                        
+                        console.log("Hello");
+                      }
+                        
+                        
+                        if(g_count==rows.length)
+                            { 
+                            if(dataset2.length==0)
+                                {
+                                var errm = "No spots nearby...";
+                                res.render('feed', {lat : lat, lng : lng, errm : errm});
+                                }
+                            else
+                              {
+                                  dataset2 = dataset2.sort(sortFunction); 
+                                  res.render('feed', {dataset : dataset2, lat : lat, lng : lng});
+                                }
                             }
-                          
-            
-                        }
                     });
-                }
-                
-
-            }  
-            
-            else
-              {
-                
-                var errm = "No spots nearby...";
-                res.render('feed', {lat : lat, lng : lng, errm : errm});
               }
-            
-
-              //res.render('index', { msg1: '' + dataset2, msg2: ''+to});
+            }  
          }); 
       });
-               /*  function sortFunction(a, b)
-              {
-                if (a[2] === b[2]) 
-                  return 0;
-                else
-                  return (a[2] < b[2]) ? -1 : 1;
-              }
-              var sorted_dataset = dataset.sort(sortFunction);
-               */
-     
-     
+      
       app.get('/spot/:id/:lat/:lng/:itemzero/', function(req, res) {
      
      var rLat = req.param('lat');
