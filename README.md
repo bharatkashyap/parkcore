@@ -5,7 +5,7 @@ Built in partnership with the [Data Driven Detroit](http://datadrivendetroit.org
 
 ### Usage
 
-* Parkcore is essentially a web application built using Node.Js - served using Express, Pug and MySQL - and eventually transformed into an Android application by using Android WebView.
+* Parkcore is essentially a web application built using Node.js - served using Express, Pug and MySQL - and eventually transformed into an Android application by using Android WebView.
 
 * Parkcore leverages the Google Maps API (Distance Matrix Services API for Node.Js,  Geolocation API for Javascript) to provide real time location; reverse geolocation and best routes to available parking spots.
 
